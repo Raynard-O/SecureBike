@@ -35,7 +35,7 @@ func TestID_CurrentID(t *testing.T) {
 			_= idObject.Next()
 			id := idObject.CurrentID()
 			assert.IsType(t, uint64(5), id)
-			fmt.Printf("[%v] value of id : %v \n is ",i, id)
+			fmt.Printf("[%v] value of ID : %v \n is ",i, id)
 			wg.Done()
 		}()
 	}

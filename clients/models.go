@@ -1,6 +1,10 @@
 package clients
 
-type client struct {
-	id uint64
-	name string
+import "time"
+
+type Client struct {
+	ID   uint64
+	Name string
+	Secure bool
+	Duration time.Time
 }
