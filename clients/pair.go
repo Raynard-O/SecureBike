@@ -43,4 +43,4 @@ func (s *Service) PairClient(id InterfaceID) cliMap {
 func (s *Service) GetAllClients() *map[uint64]*client {
 	return &s.clients
 }
-//git commit -m "pair device with microcontroller"
+//git commit -m "pair device with microcontroller"git branch -M main
