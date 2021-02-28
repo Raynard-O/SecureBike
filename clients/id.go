@@ -19,7 +19,7 @@ type ID struct {
 //the process is locked for memory lock
 func (i *ID) Next() uint64 {
 	i.lock.Lock()
-	//var id int8
+	//var ID int8
 	i.id++
 
 	defer i.lock.Unlock()
