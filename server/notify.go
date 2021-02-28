@@ -2,11 +2,9 @@ package server
 
 import (
 	"fmt"
-	"math/rand"
-	"sync"
 )
 
-func gyroscope(x,y,z int) bool {
+func Gyroscope(x,y,z int) bool {
 	var threshold = 15	//degree
 	if x > threshold || y > threshold || z > threshold{
 		return true
@@ -14,7 +12,7 @@ func gyroscope(x,y,z int) bool {
 	return false
 }
 
-func accelerometer(x, y, z int) bool {
+func Accelerometer(x, y, z int) bool {
 	var threshold = 4	//meter/sec
 	if x > threshold || y > threshold || z > threshold{
 		return true
@@ -22,58 +20,48 @@ func accelerometer(x, y, z int) bool {
 	return false
 }
 //
-func NotifyU(threshold chan bool, wg *sync.WaitGroup)  {
-	A := make(chan int, 3)
-	B := make(chan int, 3)
+func CheckSecurity(input [][]int) error {
+	//A := make(chan int, 3)
+	//B := make(chan int, 3)
 
-//loop:
+	//loop:
 	for {
-		var i int
-		i++
-		fmt.Printf("********%v\n******", i)
-		A <-rand.Intn(19)
-		A <-rand.Intn(19)
-		A <-rand.Intn(19)
-		B <-rand.Intn(5)
-		B <-rand.Intn(5)
-		B <-rand.Intn(5)
-		wg.Add(1)
-		go Notify(threshold, A, B, wg)
-		//if !(<-threshold) {
-		//	wg.Done()
-		//}
 
-		//if <- threshold{
-		//	goto loop
-		//}
+		t := true
+		fmt.Println("**************")
+		//A <-rand.Intn(16)
+		//A <-rand.Intn(16)
+		//A <-rand.Intn(16)
+		//B <-rand.Intn(5)
+		//B <-rand.Intn(5)
+		//B <-rand.Intn(5)
+		//wg.Add(1)
+		//go Notify(threshold, A, B, wg)
+		fmt.Println("Reading Sensor...")
+		//(input[1][0], input[1][1], input[1][2])
+		if !Accelerometer(input[1][0], input[1][1], input[1][2]) {
+			//threshold <- true
+			t = false
+			ActivateStolen("Displacement")
+		}
+		//s1 := [][]int{{1,3,1}}
 
+		if !Gyroscope(input[0][0], input[0][1], input[0][2])  {
+			t = false
+			ActivateStolen("Angular Velocity")
+		}
+		if !t {
+			break
+		}
+		fmt.Println("system secure")
 	}
-
-	//<- threshold
+	return nil
+}
+func ActivateStolen(input string)  {
+	SendMessage(input)
 }
 
-func Notify( threshold chan bool, A chan int, B chan int, wg *sync.WaitGroup )  {
-	//threshold := make(chan bool)
-	//var wg sync.WaitGroup
-	//wg.Add(1)
-	//go func() {
-	fmt.Println("Reading Sensor...")
-
-	//fmt.Printf("Acceleromter x : %v \n", <-A)
-	//fmt.Printf("Acceleromter y : %v \n", <-A)
-	//fmt.Printf("Acceleromter z : %v \n", <-A)
-	//fmt.Printf("Gyroscope x : %v \n", <-B)
-	//fmt.Printf("Gyroscope y : %v \n", <-B)
-	//fmt.Printf("Gyroscope z : %v \n",<-B)
-	if accelerometer(<-B, <-B, <-B){
-		threshold <- true
-		fmt.Println("Notify owner of error")
-	}
-	if gyroscope(<-A, <-A, <-A){
-		threshold <- true
-		fmt.Println("Notify owner of error")
-	}
-	//time.Sleep(time.Second)
-
-	wg.Done()
+func SendMessage(input string)  {
+	//Notify Owner
+	fmt.Printf("Notify  owner of theft, System detected change in %v\n", input)
 }

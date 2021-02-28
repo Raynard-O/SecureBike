@@ -23,6 +23,6 @@ func TestDeactivate(t *testing.T) {
 	cl := Deactivate( cli.ID , idObject, server)
 
 	fmt.Println(cl)
-	//assert.NotNil(t, cli2)
-	//fmt.Println(cli2)
+	assert.NotNil(t, cli)
+
 }

@@ -8,6 +8,7 @@ import (
 type InterfaceClient interface {
 	Create(name string, idObject clients.InterfaceID, server clients.InterfaceClient) *clients.Client
 	Deactivate(id uint64, idObject clients.InterfaceID, server clients.InterfaceClient) *clients.Client
+	GetAll(id uint64, idObject clients.InterfaceID, server clients.InterfaceClient)  *map[uint64]*clients.Client
 }
 
 
@@ -17,8 +18,6 @@ func CreateClient(action bool, id uint64) *clients.Client {
 	if action{
 		cli = Create("raynard", idObject, server)
 	}
-	Deactivate( cli.ID , idObject, server)
-
 	//fmt.Println(server.GetAClient(cli.ID))
 	return cli
 }
@@ -48,3 +47,9 @@ func Deactivate(id uint64, idObject clients.InterfaceID, server clients.Interfac
 	return clie2
 }
 
+
+func GetAll(id uint64, idObject clients.InterfaceID, server clients.InterfaceClient)  *map[uint64]*clients.Client {
+	clie := server.GetAllClients()
+
+	return clie
+}
