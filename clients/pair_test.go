@@ -59,13 +59,13 @@ func TestService_GetAllClients(t *testing.T) {
 func TestService_GetAClient(t *testing.T) {
 	idObject, server := InterfaceConnection()
 	var wg sync.WaitGroup
-	typeMap := cliMap{}
+	cliCheck := &Client{}
 	for i := 0; i < 10; i++ {
 		wg.Add(1)
 		go func() {
 			cli := server.PairClient(idObject)
 			//fmt.Printf("[%v] value of ID : %v \n is ", i,cli)
-			assert.IsType(t, typeMap, cli)
+			assert.IsType(t, cliCheck, cli)
 			wg.Done()
 		}()
 	}

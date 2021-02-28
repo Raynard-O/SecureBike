@@ -16,8 +16,8 @@ func TestID_Next(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			id := idObject.Next()
-			assert.IsType(t, int8(5), id)
-			fmt.Println(id)
+			assert.IsType(t, uint64(5), id)
+			//fmt.Println(id)
 			wg.Done()
 		}()
 	}

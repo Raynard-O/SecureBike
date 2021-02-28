@@ -1,25 +1,30 @@
 package main
 
 import (
-	"googlemaps.github.io/maps"
-	"log"
+	"ProtectMyBike/clients"
+	"ProtectMyBike/server"
+	"fmt"
+	"sync"
 )
 
-
-
-
-
-
 func main()  {
-	var clinetGCM *maps.Client
-	if clinetGCM == nil {
-		// Pre-declare an err variable to avoid shadowing client.
-		var err error
+	idObject, servers := clients.InterfaceConnection()
+	var cli *clients.Client
 
-		clinetGCM, err = maps.NewClient(maps.WithAPIKey("api-key"))
-		if err != nil {
-			log.Fatalf("maps.NewClient failed: %v", err)
-		}
-	}
+	cli = server.Create("raynard", idObject, servers)
+	cliALL := servers.GetAllClients()
+	cl := server.Deactivate( cli.ID , idObject, servers)
+	fmt.Println(cli, cl, cliALL)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	var err error
+	//threshold := make(chan bool, 1)
+	go func() {
+		input := [][]int{{1,15,2},{4,2,2}}
+		err = server.CheckSecurity(input)
+		wg.Done()
+	}()
+	wg.Wait()
+
 }
 
