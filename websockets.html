@@ -1,4 +1,15 @@
 <!-- websockets.html -->
+
+<form>
+    <select id="selFruit">
+        <option value="MyID12345">MyMircoControllerID</option>
+        <option value="Identify">Who Am I</option>
+        <option value="disconnect">disconnect</option>
+        <option value="checkSecurity1">checkSecurity(theft)</option>
+        <option value="checkSecurity">checkSecurity(secure)</option>
+    </select>
+</form>
+
 <input id="input" type="text"/>
 
 <button onclick="send()">Send</button>
@@ -6,7 +17,7 @@
 <pre id="output"></pre>
 
 <script>
-    var input = document.getElementById("input")
+    var input = document.getElementById("selFruit")
 
     var output = document.getElementById("output")
 

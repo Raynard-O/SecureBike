@@ -61,19 +61,12 @@ func SocketWeb(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// Print the message to the console
-		//m:= fmt.Sprintf("%s sent: %s\n", conn.RemoteAddr(), string(msg))
-
-		//idObject, servers := clients.InterfaceConnection()
-		//var cli *clients.Client
-		//
-		//cli = server.Create(conn,m, idObject, servers)
-		//fmt.Println(cli)
 
 
 		mm := string(msg)
+		//fmt.Println(mm)
 		switch mm {
-		case "identify":
+		case "Identify":
 			//b := []byte(strconv.FormatInt(int64(cli.ID), 10))
 			b := fmt.Sprintf("client ID: %v ", cli.ID)
 			if err = conn.WriteMessage(msgType,[]byte(b)); err != nil {
@@ -85,7 +78,8 @@ func SocketWeb(w http.ResponseWriter, r *http.Request) {
 			if err = conn.WriteMessage(msgType,[]byte(b)); err != nil {
 				return
 			}
-		default:
+
+		case "checkSecurity":
 			var wg sync.WaitGroup
 			wg.Add(1)
 			var err error
@@ -101,6 +95,27 @@ func SocketWeb(w http.ResponseWriter, r *http.Request) {
 			}
 			//fmt.Println(j)
 			wg.Wait()
+		case "checkSecurity1":
+			var wg sync.WaitGroup
+			wg.Add(1)
+			var err error
+			threshold := make(chan string)
+			go func() {
+				input := [][]int{{1,16,2},{4,1,2}}
+				err = server.CheckSecurity(input,threshold)
+				wg.Done()
+			}()
+			j := <-threshold
+			if err = conn.WriteMessage(msgType,[]byte(j)); err != nil {
+				return
+			}
+
+			wg.Wait()
+		default:
+			if err = conn.WriteMessage(msgType,[]byte("Enter Valid Command")); err != nil {
+				return
+			}
+
 		}
 
 	}

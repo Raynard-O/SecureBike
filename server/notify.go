@@ -25,7 +25,7 @@ func CheckSecurity(input [][]int, threshold chan string ) error {
 	//B := make(chan int, 3)
 
 	//loop:
-	for {
+	for i := 0; i < 10; i++ {
 
 		t := true
 		fmt.Println("**************")
@@ -49,7 +49,7 @@ func CheckSecurity(input [][]int, threshold chan string ) error {
 		if !t {
 			break
 		}
-		fmt.Println("system secure")
+		threshold <- ActivateStolen("system secured")
 	}
 	return nil
 }
