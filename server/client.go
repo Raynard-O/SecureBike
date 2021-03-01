@@ -2,6 +2,7 @@ package server
 
 import (
 	"ProtectMyBike/clients"
+	"github.com/gorilla/websocket"
 	"time"
 )
 
@@ -12,23 +13,24 @@ type InterfaceClient interface {
 }
 
 
-func CreateClient(action bool, id uint64) *clients.Client {
+func CreateClient(conn *websocket.Conn, action bool, id uint64) *clients.Client {
 	idObject, server := clients.InterfaceConnection()
 	var cli *clients.Client
 	if action{
-		cli = Create("raynard", idObject, server)
+		cli = Create(conn,"raynard", idObject, server)
 	}
 	//fmt.Println(server.GetAClient(cli.ID))
 	return cli
 }
 
 
-func Create(name string, idObject clients.InterfaceID, server clients.InterfaceClient) *clients.Client{
+func Create(conn *websocket.Conn, name string, idObject clients.InterfaceID, server clients.InterfaceClient) *clients.Client{
 	//idObject, server := clients.InterfaceConnection()
 	cli := server.PairClient(idObject)
 	//fmt.Println(cli)
 	cli.Name = name
 	cli.Secure = true
+	cli.Conn = conn
 	cli.Duration = time.Now().UTC()
 	clie := server.GetAClient(cli.ID)
 	//fmt.Println(clie)

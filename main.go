@@ -1,30 +1,69 @@
 package main
 
 import (
-	"ProtectMyBike/clients"
-	"ProtectMyBike/server"
-	"fmt"
-	"sync"
+	socket "ProtectMyBike/websocket"
+
+	"github.com/gorilla/websocket"
+	"log"
+	"net/http"
 )
 
-func main()  {
-	idObject, servers := clients.InterfaceConnection()
-	var cli *clients.Client
+// We'll need to define an Upgrader
+// this will require a Read and Write buffer size
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+//func homePage(w http.ResponseWriter, r *http.Request) {
+//	//http.ServeFile(w, r, "websockets.html")
+//}
+//
+//
+//// define a reader which will listen for
+//// new messages being sent to our WebSocket
+//// endpoint
+//func reader(conn *websocket.Conn) {
+//	for {
+//		// read in a message
+//		messageType, p, err := conn.ReadMessage()
+//		if err != nil {
+//			log.Println(err)
+//			return
+//		}
+//		// print out that message for clarity
+//		fmt.Println(string(p))
+//
+//		if err := conn.WriteMessage(messageType, p); err != nil {
+//			log.Println(err)
+//			return
+//		}
+//
+//	}
+//}
+//
+//func wsEndpoint(w http.ResponseWriter, r *http.Request) {
+//	//http.ServeFile(w, r, "websockets.html")
+//	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
+//
+//	//upgrade this connection to a WebSocket
+//	//connection
+//	ws, err := upgrader.Upgrade(w, r, nil)
+//	if err != nil {
+//		log.Println(err)
+//	}
+//	//
+//	reader(ws)
+//}
 
-	cli = server.Create("raynard", idObject, servers)
-	cliALL := servers.GetAllClients()
-	cl := server.Deactivate( cli.ID , idObject, servers)
-	fmt.Println(cli, cl, cliALL)
-	var wg sync.WaitGroup
-	wg.Add(1)
-	var err error
-	//threshold := make(chan bool, 1)
-	go func() {
-		input := [][]int{{1,15,2},{4,2,2}}
-		err = server.CheckSecurity(input)
-		wg.Done()
-	}()
-	wg.Wait()
-
+func setupRoutes() {
+	http.HandleFunc("/", socket.Home)
+	http.HandleFunc("/echo", socket.SocketWeb)
 }
 
+
+func main()  {
+
+	setupRoutes()
+	log.Fatal(http.ListenAndServe(":8080", nil))
+
+}

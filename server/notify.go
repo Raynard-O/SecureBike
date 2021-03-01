@@ -20,7 +20,7 @@ func Accelerometer(x, y, z int) bool {
 	return false
 }
 //
-func CheckSecurity(input [][]int) error {
+func CheckSecurity(input [][]int, threshold chan string ) error {
 	//A := make(chan int, 3)
 	//B := make(chan int, 3)
 
@@ -29,26 +29,22 @@ func CheckSecurity(input [][]int) error {
 
 		t := true
 		fmt.Println("**************")
-		//A <-rand.Intn(16)
-		//A <-rand.Intn(16)
-		//A <-rand.Intn(16)
-		//B <-rand.Intn(5)
-		//B <-rand.Intn(5)
-		//B <-rand.Intn(5)
-		//wg.Add(1)
-		//go Notify(threshold, A, B, wg)
+
 		fmt.Println("Reading Sensor...")
 		//(input[1][0], input[1][1], input[1][2])
 		if !Accelerometer(input[1][0], input[1][1], input[1][2]) {
 			//threshold <- true
 			t = false
-			ActivateStolen("Displacement")
+			threshold <-ActivateStolen("Displacement")
+			//fmt.Println(ActivateStolen("Displacement"))
+
 		}
 		//s1 := [][]int{{1,3,1}}
 
 		if !Gyroscope(input[0][0], input[0][1], input[0][2])  {
 			t = false
-			ActivateStolen("Angular Velocity")
+			threshold <- ActivateStolen("Angular Velocity")
+			//fmt.Println(ActivateStolen("Angular Velocity"))
 		}
 		if !t {
 			break
@@ -57,11 +53,12 @@ func CheckSecurity(input [][]int) error {
 	}
 	return nil
 }
-func ActivateStolen(input string)  {
-	SendMessage(input)
+func ActivateStolen(input string) string {
+	return SendMessage(input)
 }
 
-func SendMessage(input string)  {
+func SendMessage(input string) string {
 	//Notify Owner
-	fmt.Printf("Notify  owner of theft, System detected change in %v\n", input)
+	s := fmt.Sprintf("Notify  owner of theft, System detected change in %v\n", input)
+	return s
 }
